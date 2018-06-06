@@ -14,13 +14,14 @@ public class Main {
 
         //OpenFileAndCreate op=new OpenFileAndCreate();
         //op.initialize();
+        //op.initializeDiscretization();
 
         ReadSettings rs=new ReadSettings();
         fieldsOnOff=rs.readOnOff();
         System.out.println(fieldsOnOff);
 
-        CleanFile cf=new CleanFile(csvFile,fieldsOnOff,csvFileCleaned);
-        cf.clean();
+//        CleanFile cf=new CleanFile(csvFile,fieldsOnOff,csvFileCleaned);
+//        cf.clean();
 
 
 
