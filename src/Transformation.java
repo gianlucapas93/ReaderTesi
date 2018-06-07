@@ -34,7 +34,7 @@ public class Transformation {
 
                     int start=0,flag=0;
                     for(Integer i=0; i<intervals.length-1 && flag==0; i++){
-                        if(val>start && val<intervals[i]) flag=i;
+                        if(val>=start && val<intervals[i]) flag=i;
                         else start=intervals[i];
                     }
                     if(flag==0)labelDiscrete=label[label.length-1];

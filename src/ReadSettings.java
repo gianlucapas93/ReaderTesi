@@ -9,7 +9,9 @@ import java.util.Map;
 public class ReadSettings {
 
     String chooseFields = "C:\\Users\\Gianluca\\Desktop\\Politecnico\\chooseFields.txt";
+    String chooseFieldsCLR = "C:\\Users\\Gianluca\\Desktop\\Politecnico\\chooseFieldsCLR.txt";
     String discretizationFile = "C:\\Users\\Gianluca\\Desktop\\Politecnico\\discretization.txt";
+    String discretizationFileCLR = "C:\\Users\\Gianluca\\Desktop\\Politecnico\\discretizationCLR.txt";
     //BufferedReader br= null;
     String line="",line2="";
     String csvsplitby=",";
@@ -22,8 +24,8 @@ public class ReadSettings {
 
         try{
             Integer j=0;
-            br= new BufferedReader(new FileReader(chooseFields));
-            br2= new BufferedReader(new FileReader(discretizationFile));
+            br= new BufferedReader(new FileReader(chooseFieldsCLR));
+            br2= new BufferedReader(new FileReader(discretizationFileCLR));
             while((line=br.readLine())!=null && (line2=br2.readLine())!=null){
 
             String[] splitline=line.split(" ");
@@ -43,9 +45,11 @@ public class ReadSettings {
                 String[] nameIntervals=splitline2[4].split(",");
                 Discretization d=new Discretization(true,n,valueOfIntervals,nameIntervals);
                 map.put(j,d);
-            }}
-            arrayList.add(j,Integer.parseInt(splitline[1]));
-            j++;
+            }
+                arrayList.add(j,Integer.parseInt(splitline[1]));
+                j++;
+
+            }
 
         }}
         catch(IOException e){
@@ -53,6 +57,7 @@ public class ReadSettings {
         }
         return arrayList;
     }
+
 
     public ArrayList<Integer> getArrayList() {
         return arrayList;
