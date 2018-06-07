@@ -23,7 +23,7 @@ public class CleanFile {
 
             int y=0;
             long start = System.currentTimeMillis();
-            long zero=start,middle1;
+
             while((line=br.readLine())!=null){
                 String[] field=line.split(",");
 
@@ -36,9 +36,7 @@ public class CleanFile {
 
                 if(y%1000000==0) {
 
-                    middle1=System.currentTimeMillis();
-                    middle1=middle1-zero;
-                    zero=middle1;
+
                     System.out.println("Righe completate: "+y/1000000+"M");}
             }
             fw.close();

@@ -21,13 +21,15 @@ public class ReadSettings {
     public ArrayList<Integer> readOnOff(){
 
         try{
+            int j=0;
             br= new BufferedReader(new FileReader(chooseFields));
             br2= new BufferedReader(new FileReader(discretizationFile));
             while((line=br.readLine())!=null && (line2=br2.readLine())!=null){
 
             String[] splitline=line.split(" ");
+            if(splitline[1].equals("1")){
             String[] splitline2= line2.split(";");
-            int j=0;
+
             if(splitline2[1].equals("1")){
                 Integer n=Integer.parseInt(splitline2[2]);
 
@@ -41,7 +43,7 @@ public class ReadSettings {
                 String[] nameIntervals=splitline2[4].split(",");
                 Discretization d=new Discretization(true,n,valueOfIntervals,nameIntervals);
                 map.put(splitline[0],d);
-            }
+            }}
             arrayList.add(j,Integer.parseInt(splitline[1]));
             j++;
 
@@ -52,4 +54,19 @@ public class ReadSettings {
         return arrayList;
     }
 
+    public ArrayList<Integer> getArrayList() {
+        return arrayList;
+    }
+
+    public void setArrayList(ArrayList<Integer> arrayList) {
+        this.arrayList = arrayList;
+    }
+
+    public Map<String, Discretization> getMap() {
+        return map;
+    }
+
+    public void setMap(Map<String, Discretization> map) {
+        this.map = map;
+    }
 }

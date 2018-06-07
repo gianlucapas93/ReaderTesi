@@ -1,5 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
 
@@ -10,15 +12,22 @@ public class Main {
         String csvFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent.csv";
         String csvFileCleaned = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr2.csv";
         ArrayList<Integer> fieldsOnOff;
+        Map<String,Discretization> map =new HashMap<>();
 
 
-        //OpenFileAndCreate op=new OpenFileAndCreate();
+        OpenFileAndCreate op=new OpenFileAndCreate();
         //op.initialize();
         //op.initializeDiscretization();
+        //op.sortAndLower();
 
         ReadSettings rs=new ReadSettings();
         fieldsOnOff=rs.readOnOff();
+        map=rs.getMap();
+        
+
         System.out.println(fieldsOnOff);
+        System.out.println(map);
+
 
 //        CleanFile cf=new CleanFile(csvFile,fieldsOnOff,csvFileCleaned);
 //        cf.clean();

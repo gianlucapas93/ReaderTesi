@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.TreeMap;
 
 /*
 *   CREA IL FILE CHE MAPPA IL CAMPO E L'INTERRUTTORE ON/OFF e inizializza tutto a 1 (cioè tutti i campi presenti)
@@ -13,6 +14,7 @@ import java.util.Map;
 public class OpenFileAndCreate {
     String csvFile = "C:\\Users\\Gianluca\\Desktop\\Politecnico\\itarea_compl2016_telematics_sent_016.csv";
     String chooseFields = "C:\\Users\\Gianluca\\Desktop\\Politecnico\\chooseFields.txt";
+    String chooseFields2 = "C:\\Users\\Gianluca\\Desktop\\Politecnico\\chooseFieldsLOWSORT.txt";
     String discretizationFile = "C:\\Users\\Gianluca\\Desktop\\Politecnico\\discretization.txt";
     //BufferedReader br= null;
     String line="";
@@ -21,24 +23,21 @@ public class OpenFileAndCreate {
 
     public void initializeOnOff(){
         try(BufferedReader br = new BufferedReader(new FileReader(csvFile))){
-            BufferedWriter bw=null,bw2=null;
-            FileWriter fw=null;
+            BufferedWriter bw = new BufferedWriter(new FileWriter(chooseFields));
 
-            bw = new BufferedWriter(new FileWriter(chooseFields));
-            bw2 = new BufferedWriter(new FileWriter(discretizationFile));
 
             //HEADER COLONNE
             line= br.readLine();
             String[] field=line.split(csvsplitby);
             for(String s :field){
                 bw.write(s+" 1");
-                bw2.write(s +";0");
+
                 bw.newLine();
-                bw2.newLine();
+
             }
 
             bw.close();
-            bw2.close();
+
         }
         catch(IOException e){
             e.printStackTrace();
@@ -46,21 +45,18 @@ public class OpenFileAndCreate {
     }
     public void initializeDiscretization(){
         try{
-            BufferedReader br = new BufferedReader(new FileReader(csvFile));
-            BufferedWriter bw2=null;
-            FileWriter fw=null;
-
-
-            bw2 = new BufferedWriter(new FileWriter(discretizationFile));
+            BufferedReader br = new BufferedReader(new FileReader(chooseFields));
+            BufferedWriter bw2 = new BufferedWriter(new FileWriter(discretizationFile));
 
             //HEADER COLONNE
-            line= br.readLine();
-            String[] field=line.split(csvsplitby);
-            for(String s :field){
-                bw2.write(s +";0");
-                bw2.newLine();
-            }
+            while((line= br.readLine())!=null) {
 
+                String[] field = line.split(" ");
+
+                    bw2.write(field[0] + ";0");
+                    bw2.newLine();
+
+            }
             bw2.close();
         }
         catch(IOException e){
@@ -68,5 +64,29 @@ public class OpenFileAndCreate {
         }
     }
 
+    public void sortAndLower(){
+
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(chooseFields));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(chooseFields2));
+            Map<String,String> map=new TreeMap<>();
+            while((line= br.readLine())!=null){
+                line=line.toUpperCase();
+                String[] s=line.split(" ");
+
+                map.put(s[0],s[1]);
+
+            }
+            for(Map.Entry<String,String> entry: map.entrySet()){
+            bw.write(entry.getKey()+ " "+ entry.getValue());
+            bw.newLine();
+            }
+            System.out.println(map);
+            bw.close();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+    }
 
 }
