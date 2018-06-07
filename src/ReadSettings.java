@@ -15,13 +15,13 @@ public class ReadSettings {
     String csvsplitby=",";
     int i=0;
     ArrayList<Integer> arrayList=new ArrayList<>();
-    Map<String,Discretization> map =new HashMap<>();
+    Map<Integer,Discretization> map =new HashMap<>();
     BufferedReader br,br2;
 
     public ArrayList<Integer> readOnOff(){
 
         try{
-            int j=0;
+            Integer j=0;
             br= new BufferedReader(new FileReader(chooseFields));
             br2= new BufferedReader(new FileReader(discretizationFile));
             while((line=br.readLine())!=null && (line2=br2.readLine())!=null){
@@ -42,7 +42,7 @@ public class ReadSettings {
                 }
                 String[] nameIntervals=splitline2[4].split(",");
                 Discretization d=new Discretization(true,n,valueOfIntervals,nameIntervals);
-                map.put(splitline[0],d);
+                map.put(j,d);
             }}
             arrayList.add(j,Integer.parseInt(splitline[1]));
             j++;
@@ -62,11 +62,11 @@ public class ReadSettings {
         this.arrayList = arrayList;
     }
 
-    public Map<String, Discretization> getMap() {
+    public Map<Integer, Discretization> getMap() {
         return map;
     }
 
-    public void setMap(Map<String, Discretization> map) {
+    public void setMap(Map<Integer, Discretization> map) {
         this.map = map;
     }
 }
