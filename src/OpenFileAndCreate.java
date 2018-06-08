@@ -13,9 +13,10 @@ import java.util.TreeMap;
 
 public class OpenFileAndCreate {
     String csvFile = "C:\\Users\\Gianluca\\Desktop\\Politecnico\\itarea_compl2016_telematics_sent_016.csv";
-    String chooseFields = "C:\\Users\\Gianluca\\Desktop\\Politecnico\\chooseFields.txt";
-    String chooseFields2 = "C:\\Users\\Gianluca\\Desktop\\Politecnico\\chooseFieldsCLR.txt";
-    String discretizationFile = "C:\\Users\\Gianluca\\Desktop\\Politecnico\\discretization.txt";
+    String chooseFields = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\chooseFields.txt";
+    String chooseFieldsCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\chooseFieldsCLR.txt";
+    String discretizationFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretization.txt";
+    String discretizationFileCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretizationCLR.txt";
     //BufferedReader br= null;
     String line="";
     String csvsplitby=",";
@@ -68,7 +69,7 @@ public class OpenFileAndCreate {
 
         try{
             BufferedReader br = new BufferedReader(new FileReader(chooseFields));
-            BufferedWriter bw = new BufferedWriter(new FileWriter(chooseFields2));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(chooseFieldsCLR));
             //Map<String,String> map=new TreeMap<>();
             while((line= br.readLine())!=null){
                 line=line.toUpperCase();
@@ -91,7 +92,7 @@ public class OpenFileAndCreate {
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(chooseFields));
-            BufferedWriter bw = new BufferedWriter(new FileWriter(chooseFields2));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(chooseFieldsCLR));
             String line="";
             while((line=br.readLine())!=null){
                 String []split=line.split(" ");
@@ -101,7 +102,22 @@ public class OpenFileAndCreate {
                 }
 
             }
+            bw.flush();
             bw.close();
+
+
+
+
+            br=new BufferedReader(new FileReader(chooseFieldsCLR));
+            bw=new BufferedWriter(new FileWriter(discretizationFileCLR));
+
+            while((line=br.readLine())!=null){
+                String[] split2=line.split(" ");
+                bw.write(split2[0]+";0");
+                bw.newLine();
+            }
+            bw.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

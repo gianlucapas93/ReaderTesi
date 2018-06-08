@@ -16,7 +16,7 @@ public class Transformation {
         this.map = map;
     }
 
-    public void doDiscretization(String csvFile, String discretizedFile){
+    public void doDiscretization(){
 
         try {
             BufferedReader br=new BufferedReader(new FileReader(csvFile));
@@ -32,12 +32,15 @@ public class Transformation {
                     String[] label=d.getName_interval();
                     Integer[] intervals=d.getInterval();
 
-                    int start=0,flag=0;
-                    for(Integer i=0; i<intervals.length-1 && flag==0; i++){
+                    if(label.length!=(intervals.length+1)) throw new Exception("Vettore delle label e degli intervalli non coerenti");
+
+                    int start=0,flag=-1;
+                    //20-30 km non li fa bene
+                    for(Integer i=0; i<intervals.length-1 && flag==-1; i++){
                         if(val>=start && val<intervals[i]) flag=i;
                         else start=intervals[i];
                     }
-                    if(flag==0)labelDiscrete=label[label.length-1];
+                    if(flag==-1)labelDiscrete=label[label.length-1];
                     else{labelDiscrete=label[flag];}
 
                     splitted[entry.getKey()]=labelDiscrete;
@@ -52,6 +55,8 @@ public class Transformation {
             bw.close();
 
         } catch (IOException e) {
+            e.printStackTrace();
+        }catch (Exception e) {
             e.printStackTrace();
         }
 
