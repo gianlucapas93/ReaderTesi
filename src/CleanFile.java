@@ -18,32 +18,30 @@ public class CleanFile {
         try{
 
             BufferedReader br= new BufferedReader(new FileReader(csvFile));
-            FileWriter fw=new FileWriter(csvFileCleaned);
-            BufferedWriter bw = new BufferedWriter(fw);
+
+            BufferedWriter bw = new BufferedWriter(new FileWriter(csvFileCleaned));
 
             int y=0;
             long start = System.currentTimeMillis();
 
             while((line=br.readLine())!=null){
-                String[] field=line.split(",");
+                String[] field=line.split(",",-1);
 
                 for(Integer i=0; i<fieldsOnOff.size() && i<field.length; i++){
                     if(fieldsOnOff.get(i)!=0) bw.write(field[i]+",");
                 }
-
-                bw.write("\n");
-                y++;
-
-                if(y%1000000==0) {
-
-
-                    System.out.println("Righe completate: "+y/1000000+"M");}
+                //y++;
+                bw.newLine();
+                //if(y==1000)break;
             }
-            fw.close();
+            bw.close();
             long end = System.currentTimeMillis();
-            System.out.println((end - start) / 1000+ " seconds");
+            System.out.println("Clean file: "+(end - start) / 1000+ " seconds");
         }catch(IOException e){
             e.printStackTrace();
         }
     }
+
+
 }
+
