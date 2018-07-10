@@ -23,12 +23,33 @@ public class CleanFile {
 
             int y=0;
             long start = System.currentTimeMillis();
+            System.out.println("Inizio clean");
+            line=br.readLine();
+            String[] indice=line.split(",",-1);
 
+            for(Integer i=0; i<fieldsOnOff.size() && i<indice.length; i++){
+                if(fieldsOnOff.get(i)!=0) bw.write(indice[i]+",");
+            }
+            //y++;
+            bw.newLine();
+            int i_professione=-1,c=0;
+            for (String s:indice){
+                if (s.toLowerCase().equals("professione"))i_professione=c;
+                c++;
+            }
+            int i=0,j=0;
             while((line=br.readLine())!=null){
                 String[] field=line.split(",",-1);
 
-                for(Integer i=0; i<fieldsOnOff.size() && i<field.length; i++){
-                    if(fieldsOnOff.get(i)!=0) bw.write(field[i]+",");
+                for(i=0,j=0; i<fieldsOnOff.size() && i<field.length; i++,j++){
+                    if(fieldsOnOff.get(i)!=0) {
+                        if(field[j].toLowerCase().contains("manager")){
+                            bw.write("TOP MANAGER"+",");
+                            j=j+2;
+                        }
+                        else{
+                        bw.write(field[j]+",");}
+                    }
                 }
                 //y++;
                 bw.newLine();

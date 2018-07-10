@@ -19,19 +19,32 @@ public class Transformation {
     public void doDiscretization(String csvFile, String discretizedFile){
 
         try {
+            System.out.println("Inizio Discretization");
             BufferedReader br=new BufferedReader(new FileReader(csvFile));
             BufferedWriter bw=new BufferedWriter(new FileWriter(discretizedFile));
             String labelDiscrete="";
 
-            String line=br.readLine();
-            bw.write(line);
+            String indice=br.readLine();
+            String [] splitindice=indice.split(",",-1);
+            bw.write(indice);
             bw.newLine();
+            String line;
+            Double valtmp;
+
             while((line=br.readLine())!=null){
                 String[] splitted=line.split(",");
                 for(Map.Entry<Integer,Discretization> entry :map.entrySet()){
                     Integer val;
-                    if(splitted[entry.getKey()].isEmpty())val=0;
-                    else val=Integer.parseInt(splitted[entry.getKey()]);
+                    if(!splitted[entry.getKey()].isEmpty())
+                    {
+//                        if(splitted[entry.getKey()].contains("PR")){
+//                            System.out.println("NPLZA:"+splitted[50]+splitindice[entry.getKey()]+" "+splitted[entry.getKey()] +" disc:"+labelDiscrete);
+//
+//                        }
+
+                        valtmp=Double.parseDouble(splitted[entry.getKey()]);
+                        val=valtmp.intValue();
+
 
                     Discretization d=entry.getValue();
                     String[] label=d.getName_interval();
@@ -40,17 +53,23 @@ public class Transformation {
                     //if(label.length!=(intervals.length+1)) throw new Exception("Vettore delle label e degli intervalli non coerenti");
 
                     int start=0,flag=-1,i=0;
+                    if(splitted[50].equals("0150249273")){
+                        int prova=0;
+                    }
 
-
-                    for(i=1; i<intervals.length && flag==-1; i++){
+                    for(i=1,start=0; i<intervals.length && flag==-1; i++){
                         if(val>=start && val<intervals[i]) flag=i-1;
                         else start=intervals[i];
                     }
-                    if(flag==-1)labelDiscrete=label[label.length-1];
+                    if(flag==-1){labelDiscrete=label[label.length-1];}
                     else{labelDiscrete=label[flag];}
 
                     splitted[entry.getKey()]=labelDiscrete;
-                    System.out.println("Valore "+val +" disc:"+labelDiscrete);
+
+                    //System.out.println("NPLZA:"+splitted[50]+splitindice[entry.getKey()]+" "+val +" disc:"+labelDiscrete);
+
+
+                }
 
                 }
 
@@ -60,6 +79,7 @@ public class Transformation {
                 bw.newLine();
             }
             bw.close();
+            System.out.println("Fine Discretization");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -68,8 +88,8 @@ public class Transformation {
         }
 
     }
-    void propagateAccSx(String file1, String path){
-        String file2=path+"_acc_sx.csv";
+    void propagateAccSx(String file1, String file2){
+        //String file2=path+"_acc_sx.csv";
         Map<String,ArrayList<String>> map=new HashMap<>();
         long start = System.currentTimeMillis();
         try {
@@ -143,40 +163,8 @@ public class Transformation {
             e.printStackTrace();
         }
     }
-
-    public String getCsvFile() {
-        return csvFile;
-    }
-
-    public void setCsvFile(String csvFile) {
-        this.csvFile = csvFile;
-    }
-
-    public String getDiscretizedFile() {
-        return discretizedFile;
-    }
-
-    public void setDiscretizedFile(String discretizedFile) {
-        this.discretizedFile = discretizedFile;
-    }
-
-    public ArrayList<Integer> getFieldsOnOff() {
-        return fieldsOnOff;
-    }
-
-    public void setFieldsOnOff(ArrayList<Integer> fieldsOnOff) {
-        this.fieldsOnOff = fieldsOnOff;
-    }
-
-    public Map<Integer, Discretization> getMap() {
-        return map;
-    }
-
-    public void setMap(Map<Integer, Discretization> map) {
-        this.map = map;
-    }
-
     public void splitOldNewAnnSem(String csvFileCampDiscAfterACCSX, String VApath, String NApath, String VSpath, String NSpath) {
+        System.out.println("Inizio Split Old New");
         long start = System.currentTimeMillis();
         try {
             BufferedReader br= new BufferedReader(new FileReader(csvFileCampDiscAfterACCSX));
@@ -311,6 +299,7 @@ public class Transformation {
 
     public void groupByWeek(String fileinput, String fileoutput) {
         try {
+            System.out.println("Group by Week");
             BufferedReader br= new BufferedReader(new FileReader(fileinput));
             BufferedWriter bw=new BufferedWriter(new FileWriter(fileoutput));
 
@@ -345,7 +334,7 @@ public class Transformation {
             String old_nplza="1",now_nplza="1",old_sett="-1",now_sett="-1",old_line;
             int numero_eventi=30,numero_costi=5;
             ArrayList<Integer> eventi=new ArrayList<>(numero_eventi);
-            ArrayList<Double> costi=new ArrayList<>(numero_costi);
+            ArrayList<Integer> costi=new ArrayList<>(numero_costi);
             line=br.readLine();
             String[] oldsplit=line.split(",",-1);
             old_nplza=oldsplit[i_nplza];
@@ -356,12 +345,18 @@ public class Transformation {
             for(i=i_events,j=0; j<numero_eventi;j++,i++){
                 if(!oldsplit[i].isEmpty()){
                     eventi.add(j,Integer.parseInt(oldsplit[i]));
-                }else eventi.add(j,0);
+                }else {
+                    oldsplit[i]="0";
+                    eventi.add(j,0);
+                }
             }
             for(i=i_costs,j=0; j<numero_costi; j++,i++){
                 if(!oldsplit[i].isEmpty()){
-                    costi.add(j,Double.parseDouble(oldsplit[i]));}
-                else costi.add(j,0.0);
+                    costi.add(j,Integer.parseInt(oldsplit[i]));}
+                else {
+                    costi.add(j, 0);
+                    oldsplit[i]="0";
+                }
             }
             int countEmpty=0,countFull=0;
             while ((line=br.readLine())!=null){
@@ -375,11 +370,10 @@ public class Transformation {
                 else countFull++;
 
                 Integer sommaeventi;
-                Double sommacosti;
+                Integer sommacosti;
+                Double sommacostiTMP;
+                Double doubletmp;
 
-//                if(old_sett.equals("43")){
-//                    System.out.println("Mannaggia la marina");
-//                }
 
                 if(now_sett.equals(old_sett) && now_nplza.equals(old_nplza)){
 
@@ -390,7 +384,7 @@ public class Transformation {
                     for(i=i_events,j=0,sommaeventi=0; j<numero_eventi;i++, j++){
 
                         if(!split[i].isEmpty()){
-                            if(oldsplit[i].isEmpty())
+                            if(!oldsplit[i].isEmpty())
                             sommaeventi=Integer.parseInt(split[i])+Integer.parseInt(oldsplit[i]);
                             //System.out.println("split: "+split[i]+" oldsplit: "+oldsplit[i]+" somma: " +somma);
                             split[i]=String.valueOf(sommaeventi);
@@ -400,9 +394,11 @@ public class Transformation {
                         }
 
                     }
-                    for(i=i_costs,j=0,sommacosti=0.0;j<numero_costi;j++,i++){
+                    for(i=i_costs,j=0,sommacosti=0,sommacostiTMP=0.0;j<numero_costi;j++,i++){
                         if(!split[i].isEmpty()){
-                            sommacosti=Double.parseDouble(split[i])+Double.parseDouble(oldsplit[i]);
+
+                            sommacostiTMP=Double.parseDouble(split[i]); /*+Double.parseDouble(oldsplit[i]);*/
+                            sommacosti=sommacostiTMP.intValue();
                             split[i]=String.valueOf(sommacosti);
                         }
                         else{
@@ -434,10 +430,14 @@ public class Transformation {
 
                     for(i=i_costs,j=0; j<numero_costi; j++,i++){
                         if(!split[i].isEmpty()){
-                            costi.add(j,Double.parseDouble(split[i]));}
+//                            if(split[i].equals("4178.5")){
+//
+//                                System.out.println("---------------------------");}
+                                doubletmp=Double.parseDouble(split[i]);
+                            costi.add(j,doubletmp.intValue());}
                         else {
                             split[i]="0";
-                            costi.add(j,0.0);}
+                            costi.add(j,0);}
                     }
                     oldsplit=split;
 
@@ -453,5 +453,41 @@ public class Transformation {
             e.printStackTrace();
         }
 
+    }
+
+    public void groupByMonth(String fileinput, String fileoutput){
+
+    }
+
+    public String getCsvFile() {
+        return csvFile;
+    }
+
+    public void setCsvFile(String csvFile) {
+        this.csvFile = csvFile;
+    }
+
+    public String getDiscretizedFile() {
+        return discretizedFile;
+    }
+
+    public void setDiscretizedFile(String discretizedFile) {
+        this.discretizedFile = discretizedFile;
+    }
+
+    public ArrayList<Integer> getFieldsOnOff() {
+        return fieldsOnOff;
+    }
+
+    public void setFieldsOnOff(ArrayList<Integer> fieldsOnOff) {
+        this.fieldsOnOff = fieldsOnOff;
+    }
+
+    public Map<Integer, Discretization> getMap() {
+        return map;
+    }
+
+    public void setMap(Map<Integer, Discretization> map) {
+        this.map = map;
     }
 }

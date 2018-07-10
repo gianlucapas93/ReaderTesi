@@ -14,8 +14,8 @@ public class Main {
         String csvFileCampDiscAfterACCSX = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\itarea_compl2016_telematics_sent_016_clr_disc_acc_sx.csv";
         String csvFileCampWeek = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\itarea_compl2016_telematics_sent_016_clr_disc_week.csv";
 
-        String smallfile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\0150738566-2016.csv";
-        String smalloutput="C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\0150738566-2016-DISC.csv";
+        String smallfile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\0150298089-2016.csv";
+        String smalloutput="C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\0150298089-2016-DISC.csv";
 
         String csvCampsplitOld = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\itarea_compl2016_telematics_sent_016_clr_disc_ACCSX_old.csv";
         String csvCampsplitNew = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\itarea_compl2016_telematics_sent_016_clr_disc_ACCSX_new.csv";
@@ -33,7 +33,7 @@ public class Main {
         String discretizationFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretization.txt";
         String discretizationFileCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretizationCLR.txt";
 
-
+        long start = System.currentTimeMillis();
         ArrayList<Integer> fieldsOnOff,fieldsOnOffRAW;
         Map<Integer,Discretization> map =new HashMap<>();
 
@@ -57,7 +57,7 @@ public class Main {
 
 
         CleanFile cf=new CleanFile(csvFile,fieldsOnOffRAW,csvFileCLR);
-       // cf.clean();
+//        cf.clean();
 
         fieldsOnOff=rs.readOnOff();
         map=rs.getMap();
@@ -66,25 +66,29 @@ public class Main {
 
 
         Transformation tr=new Transformation(csvFileCLR,csvFileDisc,fieldsOnOff,map);
-        //tr.doDiscretization();
+
 
         //tr.propagateAccSx(csvFileCLR,csvFileAfterAccsx);
 
         //tr.groupByWeek(csvFileAfterAccsx,csvFileWeek);
 
+//        tr.doDiscretization(csvFileWeek,csvFileDisc);
+
+
 
         //CARTELLA DOVE RACCOGLIERE TUTTI I FILE DELLE POLIZZE SINGOLE
-        String path="C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\split_plza\\";
+
 
         File va= new File(pathGeneral+"VA");
-////        va.mkdir();
+//        va.mkdir();
         File vs= new File(pathGeneral+"VS");
-////        vs.mkdir();
+//        vs.mkdir();
         File na= new File(pathGeneral+"NA");
 //        na.mkdir();
         File ns= new File(pathGeneral+"NS");
-////        ns.mkdir();
-//      tr.splitOldNewAnnSem(csvFileWeek,va.toString(),na.toString(),vs.toString(),ns.toString());
+//        ns.mkdir();
+
+//        tr.splitOldNewAnnSem(csvFileDisc,va.toString(),na.toString(),vs.toString(),ns.toString());
 //
 
 
@@ -95,24 +99,25 @@ public class Main {
         String NS=pathGeneral+"NS\\"+"2016-NS.csv";paths.add(NS);
 //
         System.out.println("INIZIO");
-//        tr.splitForNplza(VA,pathGeneral+"\\VA\\");
-//        System.out.println("VA completato");
-//        tr.splitForNplza(VS,pathGeneral+"\\VS\\");
-//        System.out.println("VS completato");
-//        tr.splitForNplza(NA,pathGeneral+"\\NA\\");
-//        System.out.println("NA completato");
-//        tr.splitForNplza(NS,pathGeneral+"\\NS\\");
-//        System.out.println("NS completato");
+        tr.splitForNplza(VA,pathGeneral+"\\VA\\");
+        System.out.println("VA completato");
+        tr.splitForNplza(VS,pathGeneral+"\\VS\\");
+        System.out.println("VS completato");
+        tr.splitForNplza(NA,pathGeneral+"\\NA\\");
+        System.out.println("NA completato");
+        tr.splitForNplza(NS,pathGeneral+"\\NS\\");
+        System.out.println("NS completato");
 ////        }
 
-        tr.doDiscretization(smallfile,smalloutput);
+
 
 //
 //
 //        System.out.println(fieldsOnOff);
 //        System.out.println(map);
 
-
+        long end = System.currentTimeMillis();
+        System.out.println("PROCESSO COMPLETO: "+(end - start) / 1000+ " seconds");
 
 
 
