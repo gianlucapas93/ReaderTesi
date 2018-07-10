@@ -18,32 +18,51 @@ public class CleanFile {
         try{
 
             BufferedReader br= new BufferedReader(new FileReader(csvFile));
-            FileWriter fw=new FileWriter(csvFileCleaned);
-            BufferedWriter bw = new BufferedWriter(fw);
+
+            BufferedWriter bw = new BufferedWriter(new FileWriter(csvFileCleaned));
 
             int y=0;
             long start = System.currentTimeMillis();
+            System.out.println("Inizio clean");
+            line=br.readLine();
+            String[] indice=line.split(",",-1);
 
-            while((line=br.readLine())!=null){
-                String[] field=line.split(",");
-
-                for(Integer i=0; i<fieldsOnOff.size() && i<field.length; i++){
-                    if(fieldsOnOff.get(i)!=0) bw.write(field[i]+",");
-                }
-
-                bw.write("\n");
-                y++;
-
-                if(y%1000000==0) {
-
-
-                    System.out.println("Righe completate: "+y/1000000+"M");}
+            for(Integer i=0; i<fieldsOnOff.size() && i<indice.length; i++){
+                if(fieldsOnOff.get(i)!=0) bw.write(indice[i]+",");
             }
-            fw.close();
+            //y++;
+            bw.newLine();
+            int i_professione=-1,c=0;
+            for (String s:indice){
+                if (s.toLowerCase().equals("professione"))i_professione=c;
+                c++;
+            }
+            int i=0,j=0;
+            while((line=br.readLine())!=null){
+                String[] field=line.split(",",-1);
+
+                for(i=0,j=0; i<fieldsOnOff.size() && i<field.length; i++,j++){
+                    if(fieldsOnOff.get(i)!=0) {
+                        if(field[j].toLowerCase().contains("manager")){
+                            bw.write("TOP MANAGER"+",");
+                            j=j+2;
+                        }
+                        else{
+                        bw.write(field[j]+",");}
+                    }
+                }
+                //y++;
+                bw.newLine();
+                //if(y==1000)break;
+            }
+            bw.close();
             long end = System.currentTimeMillis();
-            System.out.println((end - start) / 1000+ " seconds");
+            System.out.println("Clean file: "+(end - start) / 1000+ " seconds");
         }catch(IOException e){
             e.printStackTrace();
         }
     }
+
+
 }
+

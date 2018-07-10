@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +10,7 @@ public class ReadSettings {
     String chooseFieldsCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\chooseFieldsCLR.txt";
     String discretizationFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretization.txt";
     String discretizationFileCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretizationCLR.txt";
-
+    String csvFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent.csv";
 
 
     String line="",line2="";
@@ -22,8 +20,40 @@ public class ReadSettings {
     Map<Integer,Discretization> map =new HashMap<>();
     BufferedReader br,br2;
 
-    public ArrayList<Integer> readOnOff(){
+    public ArrayList<Integer> readChooseFile(){
 
+        //legge il file degli attributi on/off, legge la prima riga del csv, confronta il numero di attributi
+        ArrayList<Integer> array=new ArrayList<>();
+        String line="",line2="";
+        try {
+            BufferedReader br=new BufferedReader(new FileReader(chooseFields));
+            BufferedReader br2=new BufferedReader(new FileReader(csvFile));
+
+            line2=br2.readLine();
+            String[] split2=line2.split(",",-1);
+           // System.out.println("Dimensione indice file originale: "+split2.length);
+            br2.close();
+            int i=0;
+            while((line=br.readLine())!=null){
+                String[] split=line.split(" ");
+
+                array.add(i,Integer.parseInt(split[1]));
+                i++;
+            }
+           // System.out.println("Dimensione file delle scelte: "+array.size());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return array;
+    }
+
+    public void writeCleanFile(){
+
+    }
+    public ArrayList<Integer> readOnOff(){
+        // leggo ogni riga del file di discretizzazione e la carico in una mappa
         try{
             Integer j=0;
             br= new BufferedReader(new FileReader(chooseFieldsCLR));
@@ -35,12 +65,14 @@ public class ReadSettings {
                 if(splitline[1].equals("1")){
                     String[] splitline2= line2.split(";");
 
-                    if(splitline2[1].equals("1")){
+                    if(!splitline2[1].equals("0")){
                         Integer n=Integer.parseInt(splitline2[2]);
 
                         String[] intervals =splitline2[3].split(",");
                         Integer[] valueOfIntervals=new Integer[n];
-                        Integer i =0;
+                        Integer i =1;
+                        //Limite inferiore 0
+                        valueOfIntervals[0]=0;
                         for(String s: intervals){
 
                             valueOfIntervals[i++]=Integer.parseInt(s);
@@ -76,5 +108,31 @@ public class ReadSettings {
 
     public void setMap(Map<Integer, Discretization> map) {
         this.map = map;
+    }
+
+    public void tookOutZero(String file1,String file2,ArrayList<Integer> array) {
+        try {
+            BufferedReader br=new BufferedReader(new FileReader(file1));
+            BufferedWriter bw=new BufferedWriter(new FileWriter(file2));
+            String line1,line2;
+            String[] split1;
+            String[] split2;
+            int i=0,count=0;
+            while ((line1=br.readLine())!=null){
+                if(array.get(i)!=0){
+                    count++;
+                    bw.write(line1);
+                    bw.newLine();
+                }
+                i++;
+            }
+            System.out.println("Attributi selezionati: "+count);
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
     }
 }
