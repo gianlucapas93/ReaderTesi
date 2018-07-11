@@ -28,6 +28,7 @@ public class Main {
         String csvFileDiscY = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_disc_y.csv";
         String csvFileAfterAccsx = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_accsx.csv";
         String csvFileWeek = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_accsx_week.csv";
+        String csvFileMonth="C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_accsx_month.csv";
         String csvFileYear = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_accsx_year.csv";
         String csvFilePlusMonth = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_accsx_week_m.csv";
         String csvFileACCSXsample = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_accsx_SAMPLE.csv";
@@ -71,13 +72,13 @@ public class Main {
         Transformation tr = new Transformation(csvFileCLR, csvFileDisc, fieldsOnOff, map);
 
 
-        //tr.propagateAccSx(csvFileCLR, csvFileAfterAccsx);
+//        tr.propagateAccSx(csvFileCLR, csvFileAfterAccsx);
 
         //tr.groupByWeek(csvFileAfterAccsx,csvFileWeek);
 //        tr.addMonth(csvFileWeek,csvFilePlusMonth);
-        tr.doDiscretization(csvFileYear,csvFileDiscY);
-
-        tr.sampleFile(csvFileDiscY, csvFileACCSXsample, 100);
+        //tr.doDiscretization(csvFileYear,csvFileDiscY);
+        //tr.groupByMonth(csvFileWeek,csvFileMonth);
+        tr.sampleFile(csvFileAfterAccsx, csvFileACCSXsample, 10000);
 
 
         //CARTELLA DOVE RACCOGLIERE TUTTI I FILE DELLE POLIZZE SINGOLE

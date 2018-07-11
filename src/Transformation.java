@@ -129,10 +129,11 @@ public class Transformation {
             String line1 = "";
             String[] split1;
             String[] split;
+            System.out.println("Inizio la lettura incidenti");
             while ((line1 = br.readLine()) != null) {
                 split = line1.split(",", -1);
 
-                if (!split[index_accsx].isEmpty()) {                                          //se la riga ha l'attributo acc_sx non nullo
+                if (!split[index_accsx].isEmpty() && !split[index_accsx].equals("0")) {                                          //se la riga ha l'attributo acc_sx non nullo
 
                     if (map.containsKey(split[index_nplza])) {                                //se la mappa contiene gia quel nplza (piu di un incidente in un anno)
                         map.get(split[index_nplza]).add(split[index_settimana]);               //aggiungo la nuova settimana alla lista
@@ -492,7 +493,7 @@ public class Transformation {
             BufferedReader br = new BufferedReader(new FileReader(fileinput));
             BufferedWriter bw = new BufferedWriter(new FileWriter(fileoutput));
             long start = System.currentTimeMillis();
-            int i_nplza = -1, i_sett = -1, i_events = -1, i_costs = -1, i_mese = -1, i = 0;
+            int i_nplza = -1, i_sett = -1, i_events = -1, i_costs = -1, i_mese = -1,i_metri=0,i_accsx=0, i = 0;
 
             String indice = br.readLine(), line;
 
@@ -516,15 +517,23 @@ public class Transformation {
                 if (s.toLowerCase().equals("mese")) {
                     i_mese = i;
                 }
+                if(s.toLowerCase().equals("numero_metri_percorsi")){
+                    i_metri = i;
+                }
+                if(s.toLowerCase().equals("acc_sx")){
+                    i_accsx = i;
+                }
                 i++;
             }
             if (i_nplza == -1 || i_sett == -1 || i_events == -1 || i_costs == -1 || i_mese == -1) {
                 System.out.println("Errore nel retrieve degli indici di settimana, costo, o eventi.");
             }
             String old_nplza = "1", now_nplza = "1", old_mese = "-1", now_mese = "-1", old_line;
-            int numero_eventi = 30, numero_costi = 4;
+            int numero_eventi = 30, numero_costi = 4,numero_metri=6,numero_accsx=1;;
             ArrayList<Integer> eventi = new ArrayList<>(numero_eventi);
             ArrayList<Integer> costi = new ArrayList<>(numero_costi);
+            ArrayList<Integer> metri=new ArrayList<>(numero_metri);
+            ArrayList<Integer> accsx=new ArrayList<>(numero_accsx);
             line = br.readLine();
             String[] oldsplit = line.split(",", -1);
             old_nplza = oldsplit[i_nplza];
@@ -595,6 +604,31 @@ public class Transformation {
                                 split[i] = oldsplit[i];
                             }
                         }
+                        int sommametri;
+                        for(i=i_metri,j=0,sommametri=0; j<numero_metri;i++, j++){
+
+                            if(!split[i].isEmpty()){
+                                sommametri=Integer.parseInt(split[i])+Integer.parseInt(oldsplit[i]);
+                                split[i]=String.valueOf(sommametri);
+                            }
+                            else{
+                                split[i]=oldsplit[i];
+                            }
+
+                        }
+                        int sommaccsx;
+                        for(i=i_accsx,j=0,sommaccsx=0; j<numero_accsx;i++, j++){
+
+                            if(!split[i].isEmpty()){
+                                sommaccsx=Integer.parseInt(split[i])+Integer.parseInt(oldsplit[i]);
+                                split[i]=String.valueOf(sommaccsx);
+                            }
+                            else{
+
+                                split[i]=oldsplit[i];
+                            }
+
+                        }
 
                         oldsplit = split;
                     } else {     //sono sulla stessa polizza ma su un mese diverso oppure ho cambiato polizza e mese
@@ -630,6 +664,23 @@ public class Transformation {
                                 costi.add(j, 0);
                             }
                         }
+                        for(i=i_metri,j=0; j<numero_metri;j++,i++){
+                            if(!split[i].isEmpty()){
+
+                                metri.add(j,Integer.parseInt(split[i]));
+                            }else {
+                                split[i]="0";
+                                metri.add(j,0);}
+                        }
+
+                        for(i=i_accsx,j=0; j<numero_accsx;j++,i++){
+                            if(!split[i].isEmpty()){
+
+                                accsx.add(j,Integer.parseInt(split[i]));
+                            }else {
+                                split[i]="0";
+                                accsx.add(j,0);}
+                        }
                         oldsplit = split;
 
 
@@ -638,7 +689,9 @@ public class Transformation {
                 } else {
                     countEmpty++;
                 }
+
             }
+            bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -757,4 +810,228 @@ public class Transformation {
             e.printStackTrace();
         }
     }
+
+    public void groupByYear(String fileinput, String fileoutput) {
+        try {
+            System.out.println("Group by Year");
+            BufferedReader br= new BufferedReader(new FileReader(fileinput));
+            BufferedWriter bw=new BufferedWriter(new FileWriter(fileoutput));
+
+            int i_nplza=-1,i_events=-1,i_costs=-1,i_metri=-1,i_accsx=-1,i=0;
+            //int i_sett = -1;
+
+            String indice=br.readLine(),line;       //leggo la tupla per selezionare gli indici corrispondenti ad ogni attributo
+
+            String [] split=indice.split(",",-1);
+            String[] indicesplit=split;
+            bw.write(indice);
+            bw.newLine();
+            //fino ad ora ho riscritto un file con le intestazioni del file origine selezionate
+            //ricavo gli indici degli attributi elencati di seguito, cioè le posizioni degli attributi nel file
+            for (String s: split){
+                if(s.toLowerCase().equals("nplza")){
+                    i_nplza=i;
+                }
+                if(s.toLowerCase().equals("ex_velocita_urbana_d")){
+                    i_events=i;
+                }
+                if(s.toLowerCase().equals("nnc")){
+                    i_costs=i;
+                }
+                if(s.toLowerCase().equals("numero_metri_percorsi")){
+                    i_metri = i;
+                }
+                if(s.toLowerCase().equals("acc_sx")){
+                    i_accsx = i;
+                }
+                i++;
+            }
+
+
+            if(i_nplza==-1||i_events==-1||i_costs==-1||i_metri==-1||i_accsx==-1){
+                System.out.println("Errore nel retrieve degli indici eventi,costi, metri o accsx.");
+                //throw new IOException();
+            }
+            String old_nplza="1",now_nplza="1";
+            int numero_eventi=30,numero_costi=4,numero_metri=6,numero_accsx=1;
+            ArrayList<Integer> eventi=new ArrayList<>(numero_eventi);
+            ArrayList<Integer> costi=new ArrayList<>(numero_costi);
+            ArrayList<Integer> metri=new ArrayList<>(numero_metri);
+            ArrayList<Integer> accsx=new ArrayList<>(numero_accsx);
+
+            line=br.readLine(); //leggo la prima riga dopo le intestazioni(seconda riga del file)
+            String[] oldsplit=line.split(",",-1);
+            old_nplza=oldsplit[i_nplza];
+            int j;
+
+            //inizializzo gli array
+            for(i=i_events,j=0; j<numero_eventi;j++,i++){
+                if(!oldsplit[i].isEmpty()){
+                    eventi.add(j,Integer.parseInt(oldsplit[i]));
+                }else{
+                    eventi.add(j,0);
+                    oldsplit[i] = "0";
+                }
+            }
+            for(i=i_costs,j=0; j<numero_costi; j++,i++){
+                if(!oldsplit[i].isEmpty()){
+                    costi.add(j,Integer.parseInt(oldsplit[i]));}
+                else{
+                    costi.add(j,0);
+                    oldsplit[i] = "0";
+                }
+            }
+            for(i=i_metri,j=0; j<numero_metri; j++,i++){
+                if(!oldsplit[i].isEmpty()){
+                    metri.add(j,Integer.parseInt(oldsplit[i]));}
+                else{
+                    metri.add(j,0);
+                    oldsplit[i] = "0";
+                }
+            }
+            for(i=i_accsx,j=0; j<numero_accsx; j++,i++){
+                if(!oldsplit[i].isEmpty()){
+                    accsx.add(j,Integer.parseInt(oldsplit[i]));}
+                else{
+                    accsx.add(j,0);
+                    oldsplit[i] = "0";
+                }
+            }
+
+
+            int countEmpty=0,countFull=0;
+
+
+            while ((line=br.readLine())!=null){ //sono nella seconda riga dopo le intestazioni
+                split=line.split(",",-1);
+                old_nplza=oldsplit[i_nplza];
+                now_nplza=split[i_nplza];
+
+                if(!now_nplza.isEmpty()){
+                    countFull++;
+
+                    Integer sommaeventi;
+                    Integer sommametri;
+                    Integer sommacosti;
+                    Integer sommaccsx;
+                    Double sommacostiTMP;
+                    Double doubletmp;
+
+
+                    //sono sempre sulla stessa polizza
+                    if(now_nplza.equals(old_nplza)){
+
+                        for(i=i_events,j=0,sommaeventi=0; j<numero_eventi;i++, j++){
+
+                            if(!split[i].isEmpty()){
+
+                                sommaeventi=Integer.parseInt(split[i])+Integer.parseInt(oldsplit[i]);
+                                split[i]=String.valueOf(sommaeventi);
+                            }
+                            else{
+                                split[i]=oldsplit[i];   //metto nella riga nuova il valore di prima
+                            }
+
+                        }
+                        for(i=i_costs,j=0,sommacosti=0,sommacostiTMP=0.0;j<numero_costi;j++,i++){
+                            if(!split[i].isEmpty()){
+                                sommacostiTMP=Double.parseDouble(split[i]); /*+Double.parseDouble(oldsplit[i]);*/
+                                sommacosti=sommacostiTMP.intValue();
+                                split[i]=String.valueOf(sommacosti);
+                            }
+                            else{
+                                split[i]=oldsplit[i];
+                            }
+                        }
+                        for(i=i_metri,j=0,sommametri=0; j<numero_metri;i++, j++){
+
+                            if(!split[i].isEmpty()){
+                                sommametri=Integer.parseInt(split[i])+Integer.parseInt(oldsplit[i]);
+                                split[i]=String.valueOf(sommametri);
+                            }
+                            else{
+                                split[i]=oldsplit[i];
+                            }
+
+                        }
+                        for(i=i_accsx,j=0,sommaccsx=0; j<numero_accsx;i++, j++){
+
+                            if(!split[i].isEmpty()){
+                                sommaccsx=Integer.parseInt(split[i])+Integer.parseInt(oldsplit[i]);
+                                split[i]=String.valueOf(sommaccsx);
+                            }
+                            else{
+
+                                split[i]=oldsplit[i];
+                            }
+
+                        }
+                        oldsplit=split; //in questo modo, nel ciclo successivo avrò in oldspit, la riga precedente
+                    }
+                    //ho cambiato polizza
+                    else{
+                        //devo stampare tutto e azzerare i contatori
+
+                        for(String s: oldsplit){
+                            bw.write(s+",");
+                        }
+                        bw.newLine();
+                        eventi.clear();
+                        costi.clear();
+                        metri.clear();
+                        accsx.clear();
+
+
+                        for(i=i_events,j=0; j<numero_eventi;j++,i++){
+                            if(!split[i].isEmpty()){
+
+                                eventi.add(j,Integer.parseInt(split[i]));
+                            }else {
+                                split[i]="0";
+                                eventi.add(j,0);}
+                        }
+
+                        for(i=i_costs,j=0; j<numero_costi; j++,i++){
+                            if(!split[i].isEmpty()){
+                                doubletmp=Double.parseDouble(split[i]);
+                                costi.add(j,doubletmp.intValue());
+                            }
+                            else {
+                                split[i]="0";
+                                costi.add(j,0);}
+                        }
+
+                        for(i=i_metri,j=0; j<numero_metri;j++,i++){
+                            if(!split[i].isEmpty()){
+
+                                metri.add(j,Integer.parseInt(split[i]));
+                            }else {
+                                split[i]="0";
+                                metri.add(j,0);}
+                        }
+
+                        for(i=i_accsx,j=0; j<numero_accsx;j++,i++){
+                            if(!split[i].isEmpty()){
+
+                                accsx.add(j,Integer.parseInt(split[i]));
+                            }else {
+                                split[i]="0";
+                                accsx.add(j,0);}
+                        }
+
+                        oldsplit=split;
+
+                    }
+                }
+                else
+                    countEmpty++;
+            }
+            bw.close();
+            System.out.println("Count nplza vuote:"+countEmpty+" Count piene: "+countFull);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
