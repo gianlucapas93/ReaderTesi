@@ -13,34 +13,34 @@ public class ReadSettings {
     String csvFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent.csv";
 
 
-    String line="",line2="";
-    String csvsplitby=",";
-    int i=0;
-    ArrayList<Integer> arrayList=new ArrayList<>();
-    Map<Integer,Discretization> map =new HashMap<>();
-    BufferedReader br,br2;
+    String line = "", line2 = "";
+    String csvsplitby = ",";
+    int i = 0;
+    ArrayList<Integer> arrayList = new ArrayList<>();
+    Map<Integer, Discretization> map = new HashMap<>();
+    BufferedReader br, br2;
 
-    public ArrayList<Integer> readChooseFile(){
+    public ArrayList<Integer> readChooseFile() {
 
         //legge il file degli attributi on/off, legge la prima riga del csv, confronta il numero di attributi
-        ArrayList<Integer> array=new ArrayList<>();
-        String line="",line2="";
+        ArrayList<Integer> array = new ArrayList<>();
+        String line = "", line2 = "";
         try {
-            BufferedReader br=new BufferedReader(new FileReader(chooseFields));
-            BufferedReader br2=new BufferedReader(new FileReader(csvFile));
+            BufferedReader br = new BufferedReader(new FileReader(chooseFields));
+            BufferedReader br2 = new BufferedReader(new FileReader(csvFile));
 
-            line2=br2.readLine();
-            String[] split2=line2.split(",",-1);
-           // System.out.println("Dimensione indice file originale: "+split2.length);
+            line2 = br2.readLine();
+            String[] split2 = line2.split(",", -1);
+            // System.out.println("Dimensione indice file originale: "+split2.length);
             br2.close();
-            int i=0;
-            while((line=br.readLine())!=null){
-                String[] split=line.split(" ");
+            int i = 0;
+            while ((line = br.readLine()) != null) {
+                String[] split = line.split(" ");
 
-                array.add(i,Integer.parseInt(split[1]));
+                array.add(i, Integer.parseInt(split[1]));
                 i++;
             }
-           // System.out.println("Dimensione file delle scelte: "+array.size());
+            // System.out.println("Dimensione file delle scelte: "+array.size());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -49,45 +49,46 @@ public class ReadSettings {
         return array;
     }
 
-    public void writeCleanFile(){
+    public void writeCleanFile() {
 
     }
-    public ArrayList<Integer> readOnOff(){
+
+    public ArrayList<Integer> readOnOff(String file1) {
         // leggo ogni riga del file di discretizzazione e la carico in una mappa
-        try{
-            Integer j=0;
-            br= new BufferedReader(new FileReader(chooseFieldsCLR));
-            br2= new BufferedReader(new FileReader(discretizationFileCLR));
+        try {
+            Integer j = 0;
+            br = new BufferedReader(new FileReader(chooseFieldsCLR));
+            br2 = new BufferedReader(new FileReader(file1));
 
-            while((line=br.readLine())!=null && (line2=br2.readLine())!=null){
+            while ((line = br.readLine()) != null && (line2 = br2.readLine()) != null) {
 
-                String[] splitline=line.split(" ");
-                if(splitline[1].equals("1")){
-                    String[] splitline2= line2.split(";");
+                String[] splitline = line.split(" ");
+                if (splitline[1].equals("1")) {
+                    String[] splitline2 = line2.split(";");
+//                    System.out.println(splitline2[0]);
+                    if (!splitline2[1].equals("0")) {
+                        Integer n = Integer.parseInt(splitline2[2]);
 
-                    if(!splitline2[1].equals("0")){
-                        Integer n=Integer.parseInt(splitline2[2]);
-
-                        String[] intervals =splitline2[3].split(",");
-                        Integer[] valueOfIntervals=new Integer[n];
-                        Integer i =1;
+                        String[] intervals = splitline2[3].split(",");
+                        Integer[] valueOfIntervals = new Integer[n];
+                        Integer i = 1;
                         //Limite inferiore 0
-                        valueOfIntervals[0]=0;
-                        for(String s: intervals){
+                        valueOfIntervals[0] = 0;
+                        for (String s : intervals) {
 
-                            valueOfIntervals[i++]=Integer.parseInt(s);
+                            valueOfIntervals[i++] = Integer.parseInt(s);
                         }
-                        String[] nameIntervals=splitline2[4].split(",");
-                        Discretization d=new Discretization(true,n,valueOfIntervals,nameIntervals);
-                        map.put(j,d);
+                        String[] nameIntervals = splitline2[4].split(",");
+                        Discretization d = new Discretization(true, n, valueOfIntervals, nameIntervals);
+                        map.put(j, d);
                     }
-                    arrayList.add(j,Integer.parseInt(splitline[1]));
+                    arrayList.add(j, Integer.parseInt(splitline[1]));
                     j++;
 
                 }
 
-            }}
-        catch(IOException e){
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return arrayList;
@@ -110,28 +111,27 @@ public class ReadSettings {
         this.map = map;
     }
 
-    public void tookOutZero(String file1,String file2,ArrayList<Integer> array) {
+    public void tookOutZero(String file1, String file2, ArrayList<Integer> array) {
         try {
-            BufferedReader br=new BufferedReader(new FileReader(file1));
-            BufferedWriter bw=new BufferedWriter(new FileWriter(file2));
-            String line1,line2;
+            BufferedReader br = new BufferedReader(new FileReader(file1));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file2));
+            String line1, line2;
             String[] split1;
             String[] split2;
-            int i=0,count=0;
-            while ((line1=br.readLine())!=null){
-                if(array.get(i)!=0){
+            int i = 0, count = 0;
+            while ((line1 = br.readLine()) != null) {
+                if (array.get(i) != 0) {
                     count++;
                     bw.write(line1);
                     bw.newLine();
                 }
                 i++;
             }
-            System.out.println("Attributi selezionati: "+count);
+            System.out.println("Attributi selezionati: " + count);
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
 
     }
