@@ -18,20 +18,20 @@ public class OpenFileAndCreate {
     String discretizationFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretization.txt";
     String discretizationFileCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretizationCLR.txt";
     //BufferedReader br= null;
-    String line="";
-    String csvsplitby=",";
-    int i=0;
+    String line = "";
+    String csvsplitby = ",";
+    int i = 0;
 
-    public void initializeOnOff(){
-        try(BufferedReader br = new BufferedReader(new FileReader(csvFile))){
+    public void initializeOnOff() {
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             BufferedWriter bw = new BufferedWriter(new FileWriter(chooseFields));
 
 
             //HEADER COLONNE
-            line= br.readLine();
-            String[] field=line.split(csvsplitby);
-            for(String s :field){
-                bw.write(s+" 1");
+            line = br.readLine();
+            String[] field = line.split(csvsplitby);
+            for (String s : field) {
+                bw.write(s + " 1");
 
                 bw.newLine();
 
@@ -39,18 +39,18 @@ public class OpenFileAndCreate {
 
             bw.close();
 
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void initializeDiscretization(){
-        try{
+
+    public void initializeDiscretization() {
+        try {
             BufferedReader br = new BufferedReader(new FileReader(chooseFields));
             BufferedWriter bw2 = new BufferedWriter(new FileWriter(discretizationFile));
 
             //HEADER COLONNE
-            while((line= br.readLine())!=null) {
+            while ((line = br.readLine()) != null) {
 
                 String[] field = line.split(" ");
 
@@ -59,20 +59,19 @@ public class OpenFileAndCreate {
 
             }
             bw2.close();
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void sortAndLower(){
+    public void sortAndLower() {
 
-        try{
+        try {
             BufferedReader br = new BufferedReader(new FileReader(chooseFields));
             BufferedWriter bw = new BufferedWriter(new FileWriter(chooseFieldsCLR));
             //Map<String,String> map=new TreeMap<>();
-            while((line= br.readLine())!=null){
-                line=line.toUpperCase();
+            while ((line = br.readLine()) != null) {
+                line = line.toUpperCase();
                 bw.write(line);
                 bw.newLine();
 
@@ -82,8 +81,7 @@ public class OpenFileAndCreate {
 //            }
 //            System.out.println(map);
             bw.close();
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -93,11 +91,11 @@ public class OpenFileAndCreate {
         try {
             BufferedReader br = new BufferedReader(new FileReader(chooseFields));
             BufferedWriter bw = new BufferedWriter(new FileWriter(chooseFieldsCLR));
-            String line="";
-            while((line=br.readLine())!=null){
-                String []split=line.split(" ");
-                if(split[1].equals("1")){
-                    bw.write(split[0]+" "+split[1]);
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                String[] split = line.split(" ");
+                if (split[1].equals("1")) {
+                    bw.write(split[0] + " " + split[1]);
                     bw.newLine();
                 }
 
@@ -106,14 +104,12 @@ public class OpenFileAndCreate {
             bw.close();
 
 
+            br = new BufferedReader(new FileReader(chooseFieldsCLR));
+            bw = new BufferedWriter(new FileWriter(discretizationFileCLR));
 
-
-            br=new BufferedReader(new FileReader(chooseFieldsCLR));
-            bw=new BufferedWriter(new FileWriter(discretizationFileCLR));
-
-            while((line=br.readLine())!=null){
-                String[] split2=line.split(" ");
-                bw.write(split2[0]+";0");
+            while ((line = br.readLine()) != null) {
+                String[] split2 = line.split(" ");
+                bw.write(split2[0] + ";0");
                 bw.newLine();
             }
             bw.close();
