@@ -24,11 +24,12 @@ public class Main {
         //FILE COMPLETO
         String csvFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent.csv";
         String csvFileCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr.csv";
-        String csvFileDisc = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_disc.csv";
+        String csvFileDiscW = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_disc_w.csv";
         String csvFileDiscY = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_disc_y.csv";
+        String csvFileDiscM = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_disc_m.csv";
         String csvFileAfterAccsx = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_accsx.csv";
         String csvFileWeek = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_accsx_week.csv";
-        String csvFileMonth="C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_accsx_month.csv";
+        String csvFileMonth = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_accsx_month.csv";
         String csvFileYear = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_accsx_year.csv";
         String csvFilePlusMonth = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_accsx_week_m.csv";
         String csvFileACCSXsample = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent_clr_accsx_SAMPLE.csv";
@@ -39,6 +40,7 @@ public class Main {
         String discretizationFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretization.txt";
         String discretizationFileCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretizationCLR.txt";
         String discretizationFileYear = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretizationY.txt";
+        String discretizationFileMonth = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretizationM.txt";
 
 
         long start = System.currentTimeMillis();
@@ -63,37 +65,41 @@ public class Main {
 
 
         CleanFile cf = new CleanFile(csvFile, fieldsOnOffRAW, csvFileCLR);
-        //cf.clean();
+//        cf.clean();
 
-        fieldsOnOff = rs.readOnOff(discretizationFileYear);
+//
+        fieldsOnOff = rs.readOnOff(discretizationFileCLR);
         map = rs.getMap();
 
 
-        Transformation tr = new Transformation(csvFileCLR, csvFileDisc, fieldsOnOff, map);
-
+        Transformation tr = new Transformation(csvFileCLR, csvFileDiscW, fieldsOnOff, map);
 
 //        tr.propagateAccSx(csvFileCLR, csvFileAfterAccsx);
 
-        //tr.groupByWeek(csvFileAfterAccsx,csvFileWeek);
-//        tr.addMonth(csvFileWeek,csvFilePlusMonth);
-        //tr.doDiscretization(csvFileYear,csvFileDiscY);
-        //tr.groupByMonth(csvFileWeek,csvFileMonth);
-        tr.sampleFile(csvFileAfterAccsx, csvFileACCSXsample, 10000);
 
+//        tr.groupByWeek(csvFileAfterAccsx,csvFileWeek);
+//        tr.addMonth(csvFileWeek, csvFilePlusMonth);
+//        tr.sampleFile(csvFilePlusMonth,csvFileACCSXsample,50);
+
+//        tr.groupByMonth(csvFilePlusMonth, csvFileMonth);
+//        tr.groupByYear(csvFilePlusMonth,csvFileYear);
+//        tr.sampleFile(csvFileMonth, csvFileACCSXsample, 50);
+
+        tr.doDiscretization(csvFilePlusMonth,csvFileDiscW);
 
         //CARTELLA DOVE RACCOGLIERE TUTTI I FILE DELLE POLIZZE SINGOLE
 
 
-        File va = new File(pathGeneral + "VA");
+//        File va = new File(pathGeneral + "VA");
 //        va.mkdir();
-        File vs = new File(pathGeneral + "VS");
+//        File vs = new File(pathGeneral + "VS");
 //        vs.mkdir();
-        File na = new File(pathGeneral + "NA");
+//        File na = new File(pathGeneral + "NA");
 //        na.mkdir();
-        File ns = new File(pathGeneral + "NS");
+//        File ns = new File(pathGeneral + "NS");
 //        ns.mkdir();
 
-//        tr.splitOldNewAnnSem(csvFileDisc,va.toString(),na.toString(),vs.toString(),ns.toString());
+//        tr.splitOldNewAnnSem(csvFilePlus, va.toString(), na.toString(), vs.toString(), ns.toString());
 //
 
 

@@ -76,10 +76,6 @@ public class OpenFileAndCreate {
                 bw.newLine();
 
             }
-//            for(Map.Entry<String,String> entry: map.entrySet()){
-//
-//            }
-//            System.out.println(map);
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
