@@ -12,23 +12,44 @@ import java.util.TreeMap;
  * */
 
 public class OpenFileAndCreate {
-    String csvFile = "C:\\Users\\Gianluca\\Desktop\\Politecnico\\itarea_compl2016_telematics_sent_016.csv";
-    String chooseFields = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\chooseFields.txt";
-    String chooseFieldsCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\chooseFieldsCLR.txt";
-    String discretizationFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretization.txt";
-    String discretizationFileCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretizationCLR.txt";
-    //BufferedReader br= null;
-    String line = "";
-    String csvsplitby = ",";
-    int i = 0;
+
+    private String chooseFields,csvFile,chooseFieldsCLR,discretizationFile,discretizationFileCLR,csvsplitby;
+
+    public OpenFileAndCreate() {
+    }
+
+    public OpenFileAndCreate(Integer anno) {
+        if (anno == 2016) {
+            this.csvFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent.csv";
+            this.chooseFields = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\chooseFields.txt";
+            this.chooseFieldsCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\chooseFieldsCLR.txt";
+            this.discretizationFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretization.txt";
+            this.discretizationFileCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretizationCLR.txt";
+            this.csvsplitby = ",";
+        } else {
+            this.csvFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2015\\itarea_compl2015_telematics_sent.csv";
+            this.chooseFields = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2015\\ReaderData\\chooseFields.txt";
+            this.chooseFieldsCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2015\\ReaderData\\chooseFieldsCLR.txt";
+            this.discretizationFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2015\\ReaderData\\discretization.txt";
+            this.discretizationFileCLR= "C:\\Users\\Gianluca\\Desktop\\Tesi\\2015\\ReaderData\\discretizationCLR.txt";
+            this.csvsplitby = ";";
+        }
+
+        //BufferedReader br= null;
+        String line = "";
+        int i = 0;
+
+    }
+
 
     public void initializeOnOff() {
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(chooseFields));
+        try (BufferedReader br = new BufferedReader(new FileReader(this.csvFile))) {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(this.chooseFields));
 
-
+            String line,line2;
             //HEADER COLONNE
-            line = br.readLine();
+            line2 = br.readLine();
+            line=line2.replaceAll("\"","");
             String[] field = line.split(csvsplitby);
             for (String s : field) {
                 bw.write(s + " 1");
@@ -46,45 +67,26 @@ public class OpenFileAndCreate {
 
     public void initializeDiscretization() {
         try {
-            BufferedReader br = new BufferedReader(new FileReader(chooseFields));
-            BufferedWriter bw2 = new BufferedWriter(new FileWriter(discretizationFile));
+            BufferedReader br;
+            BufferedWriter bw;
 
             //HEADER COLONNE
+
+            String line;
+            br = new BufferedReader(new FileReader(chooseFieldsCLR));
+            bw = new BufferedWriter(new FileWriter(discretizationFileCLR));
+
             while ((line = br.readLine()) != null) {
-
-                String[] field = line.split(" ");
-
-                bw2.write(field[0] + ";0");
-                bw2.newLine();
-
-            }
-            bw2.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void sortAndLower() {
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(chooseFields));
-            BufferedWriter bw = new BufferedWriter(new FileWriter(chooseFieldsCLR));
-            //Map<String,String> map=new TreeMap<>();
-            while ((line = br.readLine()) != null) {
-                line = line.toUpperCase();
-                bw.write(line);
+                String[] split2 = line.split(" ");
+                bw.write(split2[0] + ";0");
                 bw.newLine();
-
             }
-//            for(Map.Entry<String,String> entry: map.entrySet()){
-//
-//            }
-//            System.out.println(map);
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     public void createNewOnOff() {
 
@@ -104,15 +106,7 @@ public class OpenFileAndCreate {
             bw.close();
 
 
-            br = new BufferedReader(new FileReader(chooseFieldsCLR));
-            bw = new BufferedWriter(new FileWriter(discretizationFileCLR));
 
-            while ((line = br.readLine()) != null) {
-                String[] split2 = line.split(" ");
-                bw.write(split2[0] + ";0");
-                bw.newLine();
-            }
-            bw.close();
 
         } catch (IOException e) {
             e.printStackTrace();

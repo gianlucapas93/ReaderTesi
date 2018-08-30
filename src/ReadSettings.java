@@ -6,11 +6,11 @@ import java.util.Map;
 
 public class ReadSettings {
 
-    String chooseFields = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\chooseFields.txt";
-    String chooseFieldsCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\chooseFieldsCLR.txt";
-    String discretizationFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretization.txt";
-    String discretizationFileCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretizationCLR.txt";
-    String csvFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\itarea_compl2016_telematics_sent.csv";
+    String chooseFields;
+    String chooseFieldsCLR ;
+    String discretizationFile ;
+    String discretizationFileCLR;
+    String csvFile;
 
 
     String line = "", line2 = "";
@@ -19,6 +19,24 @@ public class ReadSettings {
     ArrayList<Integer> arrayList = new ArrayList<>();
     Map<Integer, Discretization> map = new HashMap<>();
     BufferedReader br, br2;
+
+    public ReadSettings(Integer anno) {
+        if (anno == 2016) {
+            this.csvFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2016\\itarea_compl2016_telematics_sent.csv";
+            this.chooseFields = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\chooseFields.txt";
+            this.chooseFieldsCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\chooseFieldsCLR.txt";
+            this.discretizationFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretization.txt";
+            this.discretizationFileCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretizationCLR.txt";
+            this.csvsplitby = ",";
+        } else {
+            this.csvFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2015\\itarea_compl2015_telematics_sent.csv";
+            this.chooseFields = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2015\\ReaderData\\chooseFields.txt";
+            this.chooseFieldsCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2015\\ReaderData\\chooseFieldsCLR.txt";
+            this.discretizationFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2015\\ReaderData\\discretization.txt";
+            this.discretizationFileCLR= "C:\\Users\\Gianluca\\Desktop\\Tesi\\2015\\ReaderData\\discretizationCLR.txt";
+            this.csvsplitby = ";";
+        }
+    }
 
     public ArrayList<Integer> readChooseFile() {
 
@@ -29,9 +47,9 @@ public class ReadSettings {
             BufferedReader br = new BufferedReader(new FileReader(chooseFields));
             BufferedReader br2 = new BufferedReader(new FileReader(csvFile));
 
-            line2 = br2.readLine();
-            String[] split2 = line2.split(",", -1);
-            // System.out.println("Dimensione indice file originale: "+split2.length);
+            line2 = br2.readLine().replaceAll("\"","");
+            String[] split2 = line2.split(csvsplitby, -1);
+            System.out.println("Dimensione indice file originale: "+split2.length);
             br2.close();
             int i = 0;
             while ((line = br.readLine()) != null) {
@@ -40,7 +58,7 @@ public class ReadSettings {
                 array.add(i, Integer.parseInt(split[1]));
                 i++;
             }
-            // System.out.println("Dimensione file delle scelte: "+array.size());
+             System.out.println("Dimensione file delle scelte: "+array.size());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -67,6 +85,9 @@ public class ReadSettings {
                     String[] splitline2 = line2.split(";");
 //                    System.out.println(splitline2[0]);
                     if (!splitline2[1].equals("0")) {
+                        if(j==34){
+                            System.out.println("70");
+                        }
                         Integer n = Integer.parseInt(splitline2[2]);
 
                         String[] intervals = splitline2[3].split(",");
