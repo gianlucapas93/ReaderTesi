@@ -56,17 +56,19 @@ public class Main {
 
         Integer anno;
 
-        //Serve per creare i file txt con gli attributi, si fa solo la prima volta
+        //Serve per creare i file .txt con gli attributi, si fa solo la prima volta
 
 //        OpenFileAndCreate op=new OpenFileAndCreate(anno);
 //        op.initializeOnOff();
 //        op.createNewOnOff();
 //        op.initializeDiscretization();
 
+
         anno = 2015;
         ReadSettings rs = new ReadSettings(anno);
         fieldsOnOffRAW = rs.readChooseFile();
 
+        //NON PIU UTILIZZATE..
         //CREO i due file chooseFieldsCLR e discretizationFileCLR con solo gli attributi scelti
         //per mantenere il mapping tra choose e disc
 //        rs.tookOutZero(chooseFields,chooseFieldsCLR,fieldsOnOffRAW);
@@ -76,6 +78,7 @@ public class Main {
         CleanFile cf = new CleanFile(fieldsOnOffRAW);
 //        cf.clean();
 //        cf.clean2015(csvFile2015,csvFileCLR2015);
+
 
 
         if (anno == 2016) {
@@ -113,6 +116,7 @@ public class Main {
         } else {
             pathGeneral = path2015;
         }
+
         File va = new File(pathGeneral + "VA");
 //        va.mkdir();
         File vs = new File(pathGeneral + "VS");
