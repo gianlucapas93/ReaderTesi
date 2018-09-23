@@ -492,13 +492,13 @@ public class Transformation {
 
     }
 
-    public void groupByMonth(String fileinput, String fileoutput) {
+    public void groupByMonth(String fileinput, String fileoutput,int rows) {
         try {
             System.out.println("GroupByMonth");
             BufferedReader br = new BufferedReader(new FileReader(fileinput));
             BufferedWriter bw = new BufferedWriter(new FileWriter(fileoutput));
-            long start = System.currentTimeMillis();
-            int i_nplza = -1, i_sett = -1, i_events = -1, i_costs = -1, i_mese = -1, i_metri = 0, i_accsx = 0, i = 0;
+            long start = System.currentTimeMillis(),end;
+            int i_nplza = -1, i_sett = -1, i_events = -1, i_costs = -1, i_mese = -1, i_metri = -1, i_accsx = -1, i = 0;
 
             String indice = br.readLine(), line;
 
@@ -533,12 +533,12 @@ public class Transformation {
 
             System.out.println("Indice del mese: " + i_mese);
 
-            if (i_nplza == -1 || i_sett == -1 || i_events == -1 || i_costs == -1 || i_mese == -1) {
+            if (i_nplza == -1 || i_sett == -1 || i_events == -1 || i_costs == -1 || i_mese == -1 || i_metri==-1 ||  i_accsx==-1) {
                 System.out.println("Errore nel retrieve degli indici di settimana, costo, o eventi o mese.");
             }
             String old_nplza = "1", now_nplza = "1", old_mese = "-1", now_mese = "-1", old_line;
             int numero_eventi = 30, numero_costi = 4, numero_metri = 6, numero_accsx = 1;
-            ;
+
             ArrayList<Integer> eventi = new ArrayList<>(numero_eventi);
             ArrayList<Integer> costi = new ArrayList<>(numero_costi);
             ArrayList<Integer> metri = new ArrayList<>(numero_metri);
@@ -568,6 +568,14 @@ public class Transformation {
             }
             int countEmpty = 0, countFull = 0;
             int c = 0;
+            String s1;
+
+            Integer sommaeventi;
+            Integer sommacosti;
+            Double sommacostiTMP;
+            Double doubletmp;
+            Integer sommametri;
+            int sommaccsx,quarter=0;
 
             while ((line = br.readLine()) != null) {
                 c++;
@@ -583,10 +591,11 @@ public class Transformation {
                     countFull++;
 
 
-                    Integer sommaeventi;
-                    Integer sommacosti;
-                    Double sommacostiTMP;
-                    Double doubletmp;
+                    sommaeventi=0;
+                    sommacosti=0;
+                    sommametri=0;
+                    sommacostiTMP=0.0;
+                    doubletmp=0.0;
 
 
                     if (now_mese.equals(old_mese) && now_nplza.equals(old_nplza)) {
@@ -617,7 +626,7 @@ public class Transformation {
                                 split[i] = oldsplit[i];
                             }
                         }
-                        int sommametri;
+                        sommametri=0;
                         for (i = i_metri, j = 0, sommametri = 0; j < numero_metri; i++, j++) {
 
                             if (!split[i].isEmpty()) {
@@ -628,7 +637,7 @@ public class Transformation {
                             }
 
                         }
-                        int sommaccsx;
+
                         for (i = i_accsx, j = 0, sommaccsx = 0; j < numero_accsx; i++, j++) {
 
                             if (!split[i].isEmpty()) {
@@ -644,13 +653,17 @@ public class Transformation {
                         oldsplit = split;
                     } else {     //sono sulla stessa polizza ma su un mese diverso oppure ho cambiato polizza e mese
                         //devo COMUNQUE stampare tutto e azzerare i contatori
-
+                         s1= "";
                         for (String s : oldsplit) {
-                            bw.write(s + ",");
+                            s1 = s1 + s + ",";
+                           // bw.write(s + ",");
                         }
+                        s1 = s1.substring(0, s1.length() - 2);
+                        bw.write(s1);
                         bw.newLine();
                         eventi.clear();
                         costi.clear();
+                        metri.clear();
 
 
                         for (i = i_events, j = 0; j < numero_eventi; j++, i++) {
@@ -694,12 +707,18 @@ public class Transformation {
 
 
                     }
-
+                    if(c%(rows/10)==0){
+                        end = System.currentTimeMillis();
+                        System.out.println("Processo al "+(quarter+10)+"% in "+(end - start) / 1000 + " secondi - "+c+" righe elaborate.");
+                        quarter=quarter+10;
+                        start=System.currentTimeMillis();
+                    }
                 } else {
                     countEmpty++;
                 }
 
             }
+            br.close();
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();

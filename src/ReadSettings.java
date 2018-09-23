@@ -85,9 +85,7 @@ public class ReadSettings {
                     String[] splitline2 = line2.split(";");
 //                    System.out.println(splitline2[0]);
                     if (!splitline2[1].equals("0")) {
-                        if(j==34){
-                            System.out.println("70");
-                        }
+
                         Integer n = Integer.parseInt(splitline2[2]);
 
                         String[] intervals = splitline2[3].split(",");

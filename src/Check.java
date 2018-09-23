@@ -44,4 +44,17 @@ public class Check {
         }
 
     }
+
+    public int countrows(String file) throws IOException {
+        BufferedReader br=new BufferedReader(new FileReader(file));
+        String line;
+        int count=0;
+        System.out.println("Count righe iniziato");
+        while((line=br.readLine())!=null){
+                count++;}
+
+         System.out.println("Righe totali: "+ count);
+        br.close();
+        return count;
+    }
 }
