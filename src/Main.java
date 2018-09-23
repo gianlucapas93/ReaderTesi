@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         String path2016 = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2016\\";
         String path2015 = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2015\\";
@@ -39,12 +39,15 @@ public class Main {
         String discretizationFileCLR2015 = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2015\\ReaderData\\discretizationCLR.txt";
         String discretizationFileY2015 = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2015\\ReaderData\\discretizationY.txt";
 
-        String chooseFields = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\chooseFields.txt";
-        String chooseFieldsCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\chooseFieldsCLR.txt";
-        String discretizationFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretization.txt";
-        String discretizationFileCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretizationCLR.txt";
-        String discretizationFileYear = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretizationY.txt";
-        String discretizationFileMonth = "C:\\Users\\Gianluca\\Desktop\\Tesi\\ReaderData\\discretizationM.txt";
+        String chooseFields = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2016\\ReaderData\\chooseFields.txt";
+        String chooseFieldsCLR = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2016\\ReaderData\\chooseFieldsCLR.txt";
+        String discretizationFile = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2016\\ReaderData\\discretization.txt";
+        String discretizationFileW = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2016\\ReaderData\\discretizationW.txt";
+        String discretizationFileW2015 = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2015\\ReaderData\\discretizationW.txt";
+        String discretizationFileYear = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2016\\ReaderData\\discretizationY.txt";
+        String discretizationFileYear2015 = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2015\\ReaderData\\discretizationY.txt";
+        String discretizationFileMonth = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2016\\ReaderData\\discretizationM.txt";
+        String discretizationFileMonth2015 = "C:\\Users\\Gianluca\\Desktop\\Tesi\\2015\\ReaderData\\discretizationM.txt";
 
         String test1 = "C:\\Users\\Gianluca\\Desktop\\Tesi\\test1.csv";
         String test2 = "C:\\Users\\Gianluca\\Desktop\\Tesi\\test2.csv";
@@ -53,6 +56,9 @@ public class Main {
         long start = System.currentTimeMillis();
         ArrayList<Integer> fieldsOnOff, fieldsOnOffRAW;
         Map<Integer, Discretization> map = new HashMap<>();
+
+        Check ck = new Check();
+
 
         Integer anno;
 
@@ -84,7 +90,7 @@ public class Main {
         if (anno == 2016) {
             fieldsOnOff = rs.readOnOff(discretizationFileMonth);
         } else {
-            fieldsOnOff = rs.readOnOff(discretizationFileY2015);
+            fieldsOnOff = rs.readOnOff(discretizationFileMonth2015);
         }
 
         map = rs.getMap();
@@ -96,13 +102,16 @@ public class Main {
 
 
 //        tr.sampleFile(csvFileAfterAccsx,test1,0,200);
-//        tr.groupByWeek(csvFileAfterAccsx,csvFileWeekTmp,csvFilePlusMonth);
+//        tr.groupByWeek(csvFileAfterAccsx,csvFileWeekTmp2015,csvFileWeek2015);
 //        tr.addMonth(csvFileWeek2015, csvFilePlusMonth2015);
 //        tr.sampleFile(csvFilePlusMonth2015,csvFileACCSXsample2015,200);
 
-//        int rows=tr.countRows(csvFileMonth2015);
 
-//        tr.groupByMonth(csvFilePlusMonth, csvFileMonth);
+//        int rows=ck.countrows(csvFileWeek);
+//        tr.groupByMonth(csvFileWeek, csvFileMonth,rows);
+//        rows=ck.countrows(csvFileWeek2015);
+//        tr.groupByMonth(csvFileWeek2015,csvFileMonth2015,rows);
+
 //        tr.groupByYear(csvFilePlusMonth2015,csvFileYear2015);
 //        tr.sampleFile(csvFileMonth, test1, 1,100);
 
@@ -151,9 +160,9 @@ public class Main {
 
 
         //CONTROLLI
-//        Check ck = new Check();
 //        ck.checkAccsxAndCost(csvFileCLR2015,",");
 //        tr.sampleFile(csvFileCLR2015,test1,50000);
+
 
         long end = System.currentTimeMillis();
         System.out.println("PROCESSO COMPLETO: " + (end - start) / 1000 + " seconds");
